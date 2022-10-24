@@ -43,6 +43,7 @@ func (controller *UserController) LoginPosted(c *fiber.Ctx) error {
 	var user models.User
 	var myform models.LoginForm
 
+	//Get Data Form Body
 	if err := c.BodyParser(&myform); err != nil {
 		return c.Redirect("/login")
 	}
@@ -63,6 +64,7 @@ func (controller *UserController) LoginPosted(c *fiber.Ctx) error {
 		// idn := strconv.FormatUint(uint64(user.Id), 10)
 		// return c.Redirect("/products/" + idn)
 
+		//If Login Succsess
 		return c.JSON(fiber.Map{
 			"Title": "Login Sukses",
 		})
@@ -113,7 +115,7 @@ func (controller *UserController) AddRegisteredUser(c *fiber.Ctx) error {
 	}
 
 	cart.UserIdCart = uint(user.Id)
-	//create create cart
+	//create cart whare UserIdCart = user.id
 	errCart := models.CreateCart(controller.Db, &cart)
 	if errCart != nil {
 		return c.SendStatus(500) // Server error, gagal menyimpan user
