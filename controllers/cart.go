@@ -32,12 +32,14 @@ func (controller *CartController) GetCart(c *fiber.Ctx) error {
 		return c.SendStatus(500) // http 500 internal server error
 	}
 
+	//Find Cart [] for update Total Cart
 	var cartsFK []models.CartProduct
 	errs := models.FindCart(controller.Db, &cartsFK, uint(idn))
 	if errs != nil {
 		return c.SendStatus(500) // http 500 internal server error
 	}
 
+	//Sum Cart []
 	carts.Total = 0
 	for _, num := range cartsFK {
 		carts.Total += num.Harga
@@ -79,22 +81,26 @@ func (controller *CartController) AddCart(c *fiber.Ctx) error {
 	var cart models.Cart
 	var product models.Product
 
+	//Read Product
 	err := models.ReadProductById(controller.Db, &product, ProductId)
 	if err != nil {
 		return c.SendStatus(500) // http 500 internal server error
 	}
 
+	//Read Cart
 	errs := models.ReadCartById(controller.Db, &cart, CartId)
 	if errs != nil {
 		return c.SendStatus(500) // http 500 internal server error
 	}
 
+	//Append Product To Cart
 	cart.Products = append(cart.Products, &product)
 	errss := models.InsertProductToCart(controller.Db, &cart)
 	if errss != nil {
 		return c.SendStatus(500) // http 500 internal server error
 	}
 
+	//Find Relation table Cart And Product
 	var new models.CartProduct
 	errssss := models.FindCartProduct(controller.Db, &new, uint(CartId), uint(ProductId))
 	if errssss != nil {
@@ -111,6 +117,7 @@ func (controller *CartController) AddCart(c *fiber.Ctx) error {
 	new.Price = product.Price
 	new.Owner = product.Owner
 
+	//Update Table Relation
 	errsss := models.UpdateCart(controller.Db, &new, uint(CartId), uint(ProductId))
 	if errsss != nil {
 		return c.SendStatus(500) // http 500 internal server error
@@ -260,71 +267,64 @@ func (controller *CartController) CekOutCart(c *fiber.Ctx) error {
 	id := c.Params("id")
 	idn, _ := strconv.Atoi(id)
 
+	//Create New History
 	var history models.History
 	history.UserIdHistory = uint(idn)
 	errss := models.CreateHistory(controller.Db, &history)
 	if errss != nil {
-		return c.JSON(fiber.Map{
-			"Title": "Ke3",
-		})
+		return c.SendStatus(500) // http 500 internal server error
 	}
 
+	//For Looping History Cart
 	var cartsFK []models.CartProduct
 	x := models.FindCart(controller.Db, &cartsFK, uint(idn))
 	if x != nil {
-		return c.JSON(fiber.Map{
-			"Title": "ke4",
-		})
+		return c.SendStatus(500) // http 500 internal server error
 	}
 
+	//Loping Cart Per History
 	for _, num := range cartsFK {
+		//Find Table Product
 		var product models.Product
 		err := models.ReadProductById(controller.Db, &product, num.IdForProduct)
 		if err != nil {
-			return c.JSON(fiber.Map{
-				"Title": "Ke1",
-			})
+			return c.SendStatus(500) // http 500 internal server error
 		}
 
+		//Find Table History
 		var historyy models.History
 		errsss := models.ReadHistoryByIdUser(controller.Db, &historyy, uint(idn))
 		if errsss != nil {
-			return c.JSON(fiber.Map{
-				"Title": "Ke4",
-			})
+			return c.SendStatus(500) // http 500 internal server error
 		}
 
+		//Append Product to History
 		historyy.Carts = append(historyy.Carts, &product)
 		errsssssss := models.InsertCartToHistory(controller.Db, &historyy)
 		if errsssssss != nil {
-			return c.JSON(fiber.Map{
-				"Title": "Ke5",
-			})
+			return c.SendStatus(500) // http 500 internal server error
 		}
 
+		//Find Relation Tabel
 		var new models.CartHistory
 		errsssss := models.FindCartHistory(controller.Db, &new, uint(num.IdForProduct), uint(historyy.Id))
 		if errsssss != nil {
-			return c.JSON(fiber.Map{
-				"Title": "Ke6",
-			})
+			return c.SendStatus(500) // http 500 internal server error
 		}
 
+		//Search Product
 		var listProduct models.Product
 		errssssssssss := models.ReadProductById(controller.Db, &listProduct, num.IdForProduct)
 		if errssssssssss != nil {
-			return c.JSON(fiber.Map{
-				"Title": "Ke67",
-			})
+			return c.SendStatus(500) // http 500 internal server error
 		}
 
+		//If Jumlah CekOut > Quantity Product
 		if num.Jumlah <= listProduct.Quantity {
 			listProduct.Quantity = listProduct.Quantity - num.Jumlah
 			errsssssss := models.UpdateProduct(controller.Db, &listProduct)
 			if errsssssss != nil {
-				return c.JSON(fiber.Map{
-					"Title": "Ke677",
-				})
+				return c.SendStatus(500) // http 500 internal server error
 			}
 
 			new.IdForCart = num.IdForCart
@@ -340,11 +340,10 @@ func (controller *CartController) CekOutCart(c *fiber.Ctx) error {
 			new.Harga = num.Harga
 		}
 
+		//Update field
 		ss := models.UpdateHistory(controller.Db, &new, uint(num.IdForProduct), uint(historyy.Id))
 		if ss != nil {
-			return c.JSON(fiber.Map{
-				"Title": "Ke7",
-			})
+			return c.SendStatus(500) // http 500 internal server error
 		}
 	}
 
@@ -352,33 +351,28 @@ func (controller *CartController) CekOutCart(c *fiber.Ctx) error {
 	var cart models.Cart
 	errs := models.ReadCartById(controller.Db, &cart, idn)
 	if errs != nil {
-		return c.JSON(fiber.Map{
-			"Title": "Ke2",
-		})
+		return c.SendStatus(500) // http 500 internal server error
 	}
 
+	//Update Cart Total To 0
 	cart.Total = 0
 	errsxx := models.UpdateCartUser(controller.Db, &cart)
 	if errsxx != nil {
-		return c.JSON(fiber.Map{
-			"Title": "Ke23",
-		})
+		return c.SendStatus(500) // http 500 internal server error
 	}
 
+	//Delete All Cart User From Cart Relation To Product
 	var carts []models.CartProduct
 	errsssss := models.DeleteCartUser(controller.Db, &carts, uint(idn))
 	if errsssss != nil {
-		return c.JSON(fiber.Map{
-			"Title": "Ke10",
-		})
+		return c.SendStatus(500) // http 500 internal server error
 	}
 
+	//Update Status History
 	history.Status = true
 	errssss := models.UpdateHistoryById(controller.Db, &history)
 	if errssss != nil {
-		return c.JSON(fiber.Map{
-			"Title": "Ke10",
-		})
+		return c.SendStatus(500) // http 500 internal server error
 	}
 
 	idns := strconv.FormatUint(uint64(idn), 10)

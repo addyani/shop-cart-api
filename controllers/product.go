@@ -130,6 +130,7 @@ func (controller *ProductController) AddPostedProduct(c *fiber.Ctx) error {
 	idn, _ := strconv.Atoi(id)
 	var user models.User
 
+	//if in body found file path
 	if form, err := c.MultipartForm(); err == nil {
 		// => *multipart.Form
 
@@ -158,6 +159,7 @@ func (controller *ProductController) AddPostedProduct(c *fiber.Ctx) error {
 		return c.Redirect("/products")
 	}
 
+	//For Find User Owner And ForegeinKey UserIdProduct
 	errs := models.FindUserById(controller.Db, &user, idn)
 	if errs != nil {
 		return c.Redirect("/login") // Unsuccessful login (cannot find user)
@@ -328,18 +330,7 @@ func (controller *ProductController) DeleteProduct(c *fiber.Ctx) error {
 	var product models.Product
 	models.DeleteProductById(controller.Db, &product, idn)
 
-	sess, err := controller.store.Get(c)
-	if err != nil {
-		panic(err)
-	}
-	val := sess.Get("username").(string)
-
-	var users models.User
-	errs := models.FindUserByUsername(controller.Db, &users, val)
-	if errs != nil {
-		return c.SendStatus(500) // http 500 internal server error
-	}
-
-	convert := strconv.FormatUint(uint64(users.Id), 10)
-	return c.Redirect("/products/" + convert)
+	return c.JSON(fiber.Map{
+		"Title": "Sukses Delete",
+	})
 }

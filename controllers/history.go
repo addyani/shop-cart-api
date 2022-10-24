@@ -27,46 +27,40 @@ func (controller *HistoryController) GetHistory(c *fiber.Ctx) error {
 	id := c.Params("id")
 	idn, _ := strconv.Atoi(id)
 
+	//For Looping History transaction
 	var historys []models.CartHistory
 	err := models.GetHistoryDistinct(controller.Db, &historys, idn)
 	if err != nil {
-		return c.JSON(fiber.Map{
-			"Title": "Ke1",
-		})
+		return c.SendStatus(500) // http 500 internal server error
 	}
 
+	//For Looping
 	for _, num := range historys {
+		//Find History Table Relation transaction
 		var historyss []models.CartHistory
 		errs := models.GetHistoryPerTransaksi(controller.Db, &historyss, num.IdForHistory)
 		if errs != nil {
-			return c.JSON(fiber.Map{
-				"Title": "Ke2",
-			})
+			return c.SendStatus(500) // http 500 internal server error
 		}
 
+		//For Looping
 		for _, nums := range historyss {
 			var historysss models.History
 			errs := models.ReadHistoryById(controller.Db, &historysss, nums.IdForHistory)
 			if errs != nil {
-				return c.JSON(fiber.Map{
-					"Title": "Ke3",
-				})
+				return c.SendStatus(500) // http 500 internal server error
 			}
 			historysss.Total = historysss.Total + nums.Harga
 
 			errss := models.UpdateHistoryById(controller.Db, &historysss)
 			if errss != nil {
-				return c.JSON(fiber.Map{
-					"Title": "Ke4",
-				})
+				return c.SendStatus(500) // http 500 internal server error
 			}
 
 			nums.Status = true
 			errssx := models.UpdateHistoryFK(controller.Db, &nums)
 			if errssx != nil {
-				return c.JSON(fiber.Map{
-					"Title": "Ke4",
-				})
+				return c.SendStatus(500) // http 500 internal server error
 			}
 		}
 	}
