@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"strconv"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
 	"gorm.io/gorm"
@@ -62,11 +60,18 @@ func (controller *UserController) LoginPosted(c *fiber.Ctx) error {
 		sess.Set("userId", user.Id)
 		sess.Save()
 
-		idn := strconv.FormatUint(uint64(user.Id), 10)
-		return c.Redirect("/products/" + idn)
+		// idn := strconv.FormatUint(uint64(user.Id), 10)
+		// return c.Redirect("/products/" + idn)
+
+		return c.JSON(fiber.Map{
+			"Title": "Login Sukses",
+		})
 	}
 
-	return c.Redirect("/login")
+	// return c.Redirect("/login")
+	return c.JSON(fiber.Map{
+		"Title": "Login Gagal",
+	})
 }
 
 // GET /register

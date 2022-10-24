@@ -68,28 +68,8 @@ func (controller *HistoryController) GetHistory(c *fiber.Ctx) error {
 					"Title": "Ke4",
 				})
 			}
-
-			// fmt.Println("Field Ke 2")
-			// fmt.Println(historysss.Total)
-			// fmt.Println("..................")
 		}
-		// fmt.Println("Field Ke 1")
-		// fmt.Println(historyss)
-		// fmt.Println("..................")
-
 	}
-
-	// var historys []models.CartHistory
-	// err := models.GetHistoryPerUser(controller.Db, &historys, idn)
-	// if err != nil {
-	// 	return c.SendStatus(500) // http 500 internal server error
-	// }
-
-	// var historyss []models.CartHistory
-	// errs := models.GetHistoryDistinct(controller.Db, &historyss, idn)
-	// if errs != nil {
-	// 	return c.SendStatus(500) // http 500 internal server error
-	// }
 
 	var user models.User
 	errsss := models.FindUserById(controller.Db, &user, idn)

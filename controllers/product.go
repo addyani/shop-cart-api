@@ -57,11 +57,6 @@ func (controller *ProductController) IndexxProduct(c *fiber.Ctx) error {
 		return c.Redirect("/login") // Unsuccessful login (cannot find user)
 	}
 
-	// for _, s := range *&products {
-	// 	s.IdUser = idn
-	// 	fmt.Println(s.IdUser)
-	// }
-
 	//if succeed
 	// return c.Render("products", fiber.Map{
 	// 	"Title":    "Produk Di Toko Lain",
@@ -240,7 +235,7 @@ func (controller *ProductController) GetDetailProduct2(c *fiber.Ctx) error {
 }
 
 // / GET products/editproduct/xx
-func (controller *ProductController) EditlProduct(c *fiber.Ctx) error {
+func (controller *ProductController) EditProduct(c *fiber.Ctx) error {
 	id := c.Params("id")
 	idn, _ := strconv.Atoi(id)
 
@@ -270,7 +265,7 @@ func (controller *ProductController) EditlProduct(c *fiber.Ctx) error {
 }
 
 // / POST products/editproduct/xx
-func (controller *ProductController) EditlPostedProduct(c *fiber.Ctx) error {
+func (controller *ProductController) EditPostedProduct(c *fiber.Ctx) error {
 	id := c.Params("id")
 	idn, _ := strconv.Atoi(id)
 
@@ -317,20 +312,11 @@ func (controller *ProductController) EditlPostedProduct(c *fiber.Ctx) error {
 	// save product
 	models.UpdateProduct(controller.Db, &product)
 
-	sess, err := controller.store.Get(c)
-	if err != nil {
-		panic(err)
-	}
-	val := sess.Get("username").(string)
-
-	var users models.User
-	errs := models.FindUserByUsername(controller.Db, &users, val)
-	if errs != nil {
-		return c.SendStatus(500) // http 500 internal server error
-	}
-
-	convert := strconv.Itoa(users.Id)
-	return c.Redirect("/products/" + convert)
+	// convert := strconv.FormatUint(uint64(users.Id), 10)
+	// return c.Redirect("/products/" + convert)
+	return c.JSON(fiber.Map{
+		"Title": "Sukses Edit",
+	})
 
 }
 
@@ -354,6 +340,6 @@ func (controller *ProductController) DeleteProduct(c *fiber.Ctx) error {
 		return c.SendStatus(500) // http 500 internal server error
 	}
 
-	convert := strconv.Itoa(users.Id)
+	convert := strconv.FormatUint(uint64(users.Id), 10)
 	return c.Redirect("/products/" + convert)
 }
