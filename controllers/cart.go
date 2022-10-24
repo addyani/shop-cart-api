@@ -89,16 +89,6 @@ func (controller *CartController) AddCart(c *fiber.Ctx) error {
 		return c.SendStatus(500) // http 500 internal server error
 	}
 
-	// var order models.CartProduct
-	// order.Harga = product.Price
-	// order.Jumlah = product.Quantity
-
-	// fmt.Println(uint(CartId))
-	// fmt.Println(uint(ProductId))
-	// errss := models.InsertIntoCart(controller.Db, &order, uint(CartId), uint(ProductId))
-	// if errss != nil {
-	// 	return c.SendStatus(500) // http 500 internal server error
-	// }
 	cart.Products = append(cart.Products, &product)
 	errss := models.InsertProductToCart(controller.Db, &cart)
 	if errss != nil {
@@ -126,13 +116,6 @@ func (controller *CartController) AddCart(c *fiber.Ctx) error {
 		return c.SendStatus(500) // http 500 internal server error
 	}
 
-	// if succeed
-	// idns := strconv.FormatUint(uint64(CartId), 10)
-	// return c.Redirect("/products/" + idns)
-
-	// return c.JSON(fiber.Map{
-	// 	"Title": "Horeeeeeeeeeeeeeeeeeeeee",
-	// })
 	idns := strconv.FormatUint(uint64(CartId), 10)
 	//return c.Redirect("/products/" + idns)
 
@@ -277,32 +260,6 @@ func (controller *CartController) CekOutCart(c *fiber.Ctx) error {
 	id := c.Params("id")
 	idn, _ := strconv.Atoi(id)
 
-	// var historya models.History
-	// historya.UserIdHistory = uint(idn)
-	// historya.Status = false
-	// err := models.CreateHistory(controller.Db, &historya)
-	// if err != nil {
-	// 	return c.JSON(fiber.Map{
-	// 		"Title": "Ke1",
-	// 	})
-	// }
-
-	// var historyaa models.History
-	// errs := models.ReadHistoryById(controller.Db, &historyaa, uint(idn))
-	// if errs != nil {
-	// 	return c.JSON(fiber.Map{
-	// 		"Title": "Ke2",
-	// 	})
-	// }
-
-	// var cart models.Cart
-	// errss := models.ReadCartById(controller.Db, &cart, idn)
-	// if errss != nil {
-	// 	return c.JSON(fiber.Map{
-	// 		"Title": "Ke3",
-	// 	})
-	// }
-
 	var history models.History
 	history.UserIdHistory = uint(idn)
 	errss := models.CreateHistory(controller.Db, &history)
@@ -321,17 +278,6 @@ func (controller *CartController) CekOutCart(c *fiber.Ctx) error {
 	}
 
 	for _, num := range cartsFK {
-		// fmt.Println(num.Deskripsi)
-		// fmt.Println(num.IdForCart)
-		// fmt.Println(num.IdForProduct)
-		// fmt.Println(num.Image)
-		// fmt.Println(num.Name)
-		// fmt.Println(num.Owner)
-		// fmt.Println(num.Quantity)
-		// fmt.Println(num.Jumlah)
-		// fmt.Println(num.Price)
-		// fmt.Println(num.Harga)
-		// fmt.Println("..................")
 		var product models.Product
 		err := models.ReadProductById(controller.Db, &product, num.IdForProduct)
 		if err != nil {
@@ -394,10 +340,6 @@ func (controller *CartController) CekOutCart(c *fiber.Ctx) error {
 			new.Harga = num.Harga
 		}
 
-		// fmt.Println("Nilai Num CART", num.IdForCart)
-		// fmt.Println("Nilai Num Product", num.IdForProduct)
-		// fmt.Println("Nilai Num HISTORY", historyy.Id)
-
 		ss := models.UpdateHistory(controller.Db, &new, uint(num.IdForProduct), uint(historyy.Id))
 		if ss != nil {
 			return c.JSON(fiber.Map{
@@ -406,90 +348,7 @@ func (controller *CartController) CekOutCart(c *fiber.Ctx) error {
 		}
 	}
 
-	// for _, num := range cartsFK {
-	// 	historyaa.Carts = append(historyaa.Carts, &cart)
-	// 	errsss := models.InsertCartToHistory(controller.Db, &historyaa)
-	// 	if errsss != nil {
-	// 		return c.JSON(fiber.Map{
-	// 			"Title": "Ke5",
-	// 			"info":  num,
-	// 		})
-	// 	}
-	// 	// var updatehistory models.CartHistory
-	// 	// updatehistory.Image = num.Image
-	// 	// updatehistory.Name = num.Name
-	// 	// updatehistory.Deskripsi = num.Deskripsi
-	// 	// updatehistory.Quantity = num.Quantity
-	// 	// updatehistory.Price = num.Price
-	// 	// updatehistory.Owner = num.Owner
-	// 	// updatehistory.Jumlah = num.Jumlah
-	// 	// updatehistory.Harga = num.Harga
-	// 	// sss := models.UpdateHistory(controller.Db, &updatehistory, uint(num.IdForCart), uint(num.IdForProduct), uint(historyaa.Id))
-	// 	// if sss != nil {
-	// 	// 	return c.JSON(fiber.Map{
-	// 	// 		"Title": "Ke6",
-	// 	// 	})
-	// 	// }
-	// }
-
-	// var coba models.History
-	// xsxs := models.ReadHistoryById(controller.Db, &coba, uint(idn))
-	// if xsxs != nil {
-	// 	return c.JSON(fiber.Map{
-	// 		"Title": "Ke7",
-	// 	})
-	// }
-
-	// var history models.CartHistory
-	// history.IdForHistory = int(historya.Id)
-	// for _, num := range cartsFK {
-	// 	history.IdForCart = num.IdForCart
-	// 	history.Image = num.Image
-	// 	history.Name = num.Name
-	// 	history.Deskripsi = num.Deskripsi
-	// 	history.Quantity = num.Quantity
-	// 	history.Price = num.Price
-	// 	history.Owner = num.Owner
-	// 	history.Jumlah = num.Jumlah
-	// 	history.Harga = num.Harga
-	// 	// errss := models.CreateHistoryFK(controller.Db, &history)
-	// 	// if errss != nil {
-	// 	// 	return c.JSON(fiber.Map{
-	// 	// 		"Title": "3",
-	// 	// 	})
-	// 	// }
-	// }
-
-	//
-	// var history models.CartHistory
-	// history.IdForHistory = int(historya.Id)
-	// for _, num := range cartsFK {
-	// 	history.IdForCart = num.IdForCart
-	// 	history.Image = num.Image
-	// 	history.Name = num.Name
-	// 	history.Deskripsi = num.Deskripsi
-	// 	history.Quantity = num.Quantity
-	// 	history.Price = num.Price
-	// 	history.Owner = num.Owner
-	// 	history.Jumlah = num.Jumlah
-	// 	history.Harga = num.Harga
-	// 	errss := models.CreateHistoryFK(controller.Db, &history)
-	// 	if errss != nil {
-	// 		return c.JSON(fiber.Map{
-	// 			"Title": "3",
-	// 		})
-	// 	}
-	// }
-
-	// var listHistory []models.CartHistory
-	// errsss := models.FindHistoryFK(controller.Db, &listHistory, historya.Id)
-	// if errsss != nil {
-	// 	return c.JSON(fiber.Map{
-	// 		"Title": "4",
-	// 	})
-	// }
-
-	//Copy Total Cart To History and Make Total Cart To 0
+	//Cart To History and Make Total Cart To 0
 	var cart models.Cart
 	errs := models.ReadCartById(controller.Db, &cart, idn)
 	if errs != nil {
@@ -497,27 +356,6 @@ func (controller *CartController) CekOutCart(c *fiber.Ctx) error {
 			"Title": "Ke2",
 		})
 	}
-
-	// var historyyy models.History
-	// errsssx := models.ReadHistoryById(controller.Db, &historyyy, uint(idn))
-	// if errsssx != nil {
-	// 	return c.JSON(fiber.Map{
-	// 		"Title": "Ke422",
-	// 	})
-	// }
-
-	// fmt.Println("HARGAAAAAAAAAAAAA OIIIIIIIIIIII", cart.Total)
-	// fmt.Println(historyyy.Status)
-	// fmt.Println(historyyy.Total)
-	// fmt.Println(historyyy.Id)
-
-	// historyyy.Total = cart.Total
-	// errssss := models.UpdateHistoryById(controller.Db, &historyyy)
-	// if errssss != nil {
-	// 	return c.JSON(fiber.Map{
-	// 		"Title": "Ke45",
-	// 	})
-	// }
 
 	cart.Total = 0
 	errsxx := models.UpdateCartUser(controller.Db, &cart)
@@ -542,19 +380,6 @@ func (controller *CartController) CekOutCart(c *fiber.Ctx) error {
 			"Title": "Ke10",
 		})
 	}
-
-	// idns := strconv.FormatUint(uint64(idn), 10)
-	// return c.Redirect("/history/" + idns)
-
-	// return c.JSON(fiber.Map{
-	// 	"Title":   "Ini",
-	// 	"ccartFK": cartsFK,
-	// })
-
-	// return c.Render("history", fiber.Map{
-	// 	"Title":   "List History",
-	// 	"ccartFK": cartsFK,
-	// })
 
 	idns := strconv.FormatUint(uint64(idn), 10)
 	//return c.Redirect("/history/" + idns)

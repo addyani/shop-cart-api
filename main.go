@@ -45,8 +45,8 @@ func main() {
 	prod.Get("/create/:id", prodController.AddProduct)
 	prod.Post("/create/:id", prodController.AddPostedProduct)
 	prod.Get("/detail/:id", prodController.GetDetailProduct2)
-	prod.Get("/editproduct/:id", prodController.EditlProduct)
-	prod.Post("/editproduct/:id", prodController.EditlPostedProduct)
+	prod.Get("/editproduct/:id", prodController.EditProduct)
+	prod.Post("/editproduct/:id", prodController.EditPostedProduct)
 	prod.Get("/deleteproduct/:id", prodController.DeleteProduct)
 
 	cart := app.Group("/cart")
