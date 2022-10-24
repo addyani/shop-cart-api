@@ -1,0 +1,32 @@
+{{template "partials/header" .}}
+
+<h1>Welcome {{.Users.Name}}</h1>
+<br>
+<h2>{{.Title}}</h2> 
+<br>
+<div>
+	
+	<table class="table table-striped">
+		<thead>
+		  <tr>
+			<th scope="col">Transaksi Ke #</th>
+			<th scope="col">Total Pembayaran</th>
+			<th scope="col">Detail</th>
+		  </tr>
+		</thead>
+		<tbody>
+			{{range .Carts}} 
+			<tr>
+				<th scope="row">{{.Id}}</th>
+                <td>{{.Total}}</td>
+				<td>
+					<a href="/history/user/{{.UserIdHistory}}/detail/{{.Id}}" class="btn btn-outline-info">Detail</a>
+				</td>
+			</tr>
+		  {{end}}
+		  
+		</tbody>
+	  </table>
+</div>
+
+{{template "partials/footer" .}}

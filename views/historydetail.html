@@ -1,0 +1,41 @@
+{{template "partials/header" .}}
+
+<h1>Welcome {{.Users.Name}}</h1>
+<br>
+<h2>{{.Title}}</h2> 
+<br>
+<div>
+	
+	<table class="table table-striped">
+		<thead>
+		  <tr>
+			<th scope="col">#</th>
+			<th scope="col">Foto Product</th>
+			<th scope="col">Nama Product</th>
+			<th scope="col">Harga Satuan</th>
+            <th scope="col">Owner</th>
+			<th scope="col">Banyak Beli</th>
+			<th scope="col">Jumlah Beli</th>
+		  </tr>
+		</thead>
+		<tbody>
+			{{range .Carts}} 
+			<tr>
+				<th scope="row">
+                    Cart {{.IdForCart}}
+                    Product {{.IdForProduct}}
+                </th>
+				<td><img class="rounded mx-auto d-block " src="..\public\images\{{.Image}}" height="100" width="100" alt=""></td>
+				<td>{{.Name}}</td>
+				<td>{{.Price}}</td>
+				<td>{{.Owner}}</td>
+                <td>{{.Jumlah}}</td>
+                <td>{{.Harga}}</td>
+			</tr>
+		  {{end}}
+		  
+		</tbody>
+	  </table>
+</div>
+
+{{template "partials/footer" .}}

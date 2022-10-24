@@ -1,0 +1,58 @@
+{{template "partials/header" .}}
+
+<h1>Welcome {{.Users.Name}}</h1>
+<br>
+<h2>{{.Title}}</h2> 
+<br>
+<div>
+	
+	<table class="table table-striped">
+		<thead>
+		  <tr>
+			<th scope="col">#</th>
+			<th scope="col">Foto Product</th>
+			<th scope="col">Nama Product</th>
+			<th scope="col">Quantity</th>
+			<th scope="col">Harga</th>
+            <th scope="col">Owner</th>
+			<th scope="col">Banyak Beli</th>
+			<th scope="col">Jumlah Beli</th>
+            <th scope="col">Tambah</th>
+            <th scope="col">Kurang</th>
+            <th scope="col">Batal</th>
+		  </tr>
+		</thead>
+		<tbody>
+			{{range .Carts}} 
+			<tr>
+				<th scope="row">
+                    Cart {{.IdForCart}}
+                    Product {{.IdForProduct}}
+                </th>
+				<td><img class="rounded mx-auto d-block " src="..\public\images\{{.Image}}" height="100" width="100" alt=""></td>
+				<td>{{.Name}}</td>
+				<td>{{.Quantity}}</td>
+				<td>{{.Price}}</td>
+				<td>{{.Owner}}</td>
+                <td>{{.Jumlah}}</td>
+                <td>{{.Harga}}</td>
+				<td>
+					<a href="/cart/{{.IdForCart}}/product/{{.IdForProduct}}/redirect" class="btn btn-outline-info">Tambah</a>
+				</td>
+                <td>
+					<a href="/cart/{{.IdForCart}}/product/{{.IdForProduct}}/kurang" class="btn btn-warning">Kurang</a>
+				</td>
+                <td>
+					<a href="/cart/{{.IdForCart}}/product/{{.IdForProduct}}/batal" class="btn btn-danger">Batal</a>
+				</td>
+			</tr>
+		  {{end}}
+		  
+		</tbody>
+	  </table>
+
+      <h1>Harga Total = {{.CartUser.Total}}</h1>
+      <a href="/cart/cekout/{{.Users.Id}}" class="btn btn-primary">CekOut</a>
+</div>
+
+{{template "partials/footer" .}}
